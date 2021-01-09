@@ -19,8 +19,7 @@ public class AssetFileReader extends InputStreamReader {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileReader(String fileName) throws IOException {
-        super(new AssetFileInputStream(fileName),
-                EncodingDetector.getEncoding(new AssetFileInputStream(fileName), true));
+        super(new AssetFileInputStream(fileName));
     }
 
     /**
@@ -30,8 +29,7 @@ public class AssetFileReader extends InputStreamReader {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileReader(@NonNull AssetFile file) throws IOException {
-        super(new AssetFileInputStream(file),
-                EncodingDetector.getEncoding(new AssetFileInputStream(file), true));
+        super(new AssetFileInputStream(file));
     }
 
     /**
@@ -41,8 +39,7 @@ public class AssetFileReader extends InputStreamReader {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileReader(@NonNull AssetFileDescriptor afd) throws IOException {
-        super(new AssetFileInputStream(afd),
-                EncodingDetector.getEncoding(new AssetFileInputStream(afd), true));
+        super(new AssetFileInputStream(afd));
     }
 
 }

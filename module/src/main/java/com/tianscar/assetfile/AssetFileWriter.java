@@ -19,8 +19,7 @@ public class AssetFileWriter extends OutputStreamWriter {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileWriter(@NonNull String fileName) throws IOException {
-        super(new AssetFileOutputStream(fileName),
-                EncodingDetector.getEncoding(new AssetFileInputStream(fileName), true));
+        super(new AssetFileOutputStream(fileName));
     }
 
     /**
@@ -30,8 +29,7 @@ public class AssetFileWriter extends OutputStreamWriter {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileWriter(@NonNull AssetFile file) throws IOException {
-        super(new AssetFileOutputStream(file),
-                EncodingDetector.getEncoding(new AssetFileInputStream(file), true));
+        super(new AssetFileOutputStream(file));
     }
 
     /**
@@ -41,8 +39,7 @@ public class AssetFileWriter extends OutputStreamWriter {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileWriter(@NonNull AssetFileDescriptor afd) throws IOException {
-        super(new AssetFileOutputStream(afd),
-                EncodingDetector.getEncoding(new AssetFileInputStream(afd), true));
+        super(new AssetFileOutputStream(afd));
     }
 
 }
