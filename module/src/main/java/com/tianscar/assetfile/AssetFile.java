@@ -34,7 +34,7 @@ public class AssetFile {
      *
      * @param pathname A pathname string
      */
-    public AssetFile (@NonNull String pathname) {
+    public AssetFile(@NonNull String pathname) {
         if (pathname.equals("/")) {
             this.path = "";
         }
@@ -55,7 +55,7 @@ public class AssetFile {
      * @param parent The parent pathname string
      * @param child  The child pathname string
      */
-    public AssetFile (@NonNull String parent, @NonNull String child) {
+    public AssetFile(@NonNull String parent, @NonNull String child) {
         this (parsePath(parent, child));
     }
 
@@ -65,7 +65,7 @@ public class AssetFile {
      * @param parent The parent abstract pathname
      * @param child  The child pathname string
      */
-    public AssetFile (@NonNull AssetFile parent, @NonNull String child) {
+    public AssetFile(@NonNull AssetFile parent, @NonNull String child) {
         this (parent.getPath(), child);
     }
 
@@ -76,7 +76,7 @@ public class AssetFile {
      *            and undefined authority, query, and fragment components
      * @throws IllegalArgumentException If the preconditions on the parameter do not hold
      */
-    public AssetFile (@NonNull Uri uri) {
+    public AssetFile(@NonNull Uri uri) {
         this (parseUri(uri));
     }
 
@@ -88,7 +88,7 @@ public class AssetFile {
      *            a non-empty path component, and undefined authority, query, and fragment components
      * @throws IllegalArgumentException If the preconditions on the parameter do not hold
      */
-    public AssetFile (@NonNull URI uri) {
+    public AssetFile(@NonNull URI uri) {
         this (parseURI(uri));
     }
 
@@ -107,12 +107,17 @@ public class AssetFile {
     }
 
     private @Nullable File export (@NonNull File pathname) throws IOException {
-        return export(pathname, false);
+        if (isFile()) {
+            return exportFile(pathname, false);
+        }
+        else {
+            return exportDir(pathname, false);
+        }
     }
 
-    private @Nullable File export (@NonNull File pathname, boolean override) throws IOException {
+    private @Nullable File exportFile (@NonNull File pathname, boolean override) throws IOException {
         if (isDirectory()) {
-            return export(pathname, this, false);
+            return null;
         }
         if (pathname.exists() && pathname.canWrite()) {
             if (!override) {
@@ -159,7 +164,7 @@ public class AssetFile {
      * method denies write access to the file
      */
     public @Nullable File createNewFile (@NonNull String parent) throws IOException {
-        return export(new File(parent, getName()));
+        return exportFile(new File(parent, getName()), false);
     }
 
     /**
@@ -180,7 +185,7 @@ public class AssetFile {
      */
     public @Nullable File createNewFile (@NonNull File parent) throws IOException
     {
-        return export(new File(parent, getName()));
+        return exportFile(new File(parent, getName()), false);
     }
 
     /**
@@ -200,7 +205,7 @@ public class AssetFile {
      * method denies write access to the file
      */
     public @Nullable File createNewFile (@NonNull Uri parent) throws IOException {
-        return export(new File(UriUtils.uri2path(parent), getName()));
+        return exportFile(new File(UriUtils.uri2path(parent), getName()), false);
     }
 
     /**
@@ -222,7 +227,7 @@ public class AssetFile {
      * @throws IllegalArgumentException If the preconditions on the parameter do not hold
      */
     public @Nullable File createNewFile (@NonNull URI parent) throws IOException {
-        return export(new File(new File(parent), getName()));
+        return exportFile(new File(new File(parent), getName()), false);
     }
 
     /**
@@ -266,7 +271,7 @@ public class AssetFile {
     public static File createTempFile (@NonNull String prefix, @Nullable String suffix, @Nullable File directory,
                                        @NonNull AssetFile file) throws IOException {
         File tempFile = File.createTempFile(prefix, suffix, directory);
-        file.export(tempFile, true);
+        file.exportFile(tempFile, true);
         return tempFile;
     }
 
@@ -653,8 +658,8 @@ public class AssetFile {
         return (AssetFile[]) fileList.toArray();
     }
 
-    private @Nullable File export (@NonNull File pathname, @NonNull AssetFile dir, boolean mkdirs) throws IOException {
-        if (!dir.isDirectory()) {
+    private @Nullable File exportDir (@NonNull File pathname, boolean mkdirs) throws IOException {
+        if (!isDirectory()) {
             return null;
         }
         if (pathname.exists()) {
@@ -670,14 +675,14 @@ public class AssetFile {
                 return null;
             }
         }
-        AssetFile[] files = dir.listFiles();
+        AssetFile[] files = listFiles();
         if (files != null) {
             for (AssetFile asset : files) {
                 if (asset.isFile()) {
                     asset.createNewFile(pathname);
                 }
                 else {
-                    export(new File(pathname, asset.getPath()), asset, mkdirs);
+                    asset.exportDir(new File(pathname, asset.getPath()), mkdirs);
                 }
             }
         }
@@ -694,7 +699,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdir (@NonNull String parent) throws IOException {
-        return export(new File(new File(parent), getPath()), this, false);
+        return exportDir(new File(new File(parent), getPath()), false);
     }
 
     /**
@@ -707,7 +712,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdir (@NonNull File parent) throws IOException {
-        return export(new File(parent, getPath()), this, false);
+        return exportDir(new File(parent, getPath()), false);
     }
 
     /**
@@ -720,7 +725,11 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdir (@NonNull Uri parent) throws IOException {
-        return export(new File(new File(UriUtils.uri2path(parent)), getPath()), this, false);
+        String dirPath = UriUtils.uri2path(parent);
+        if (dirPath != null) {
+            return exportDir(new File(new File(dirPath), getPath()), false);
+        }
+        return null;
     }
 
     /**
@@ -734,7 +743,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdir (@NonNull URI parent) throws IOException {
-        return export(new File(new File(parent), getPath()), this, false);
+        return exportDir(new File(new File(parent), getPath()), false);
     }
 
     /**
@@ -750,7 +759,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdirs (@NonNull String parent) throws IOException {
-        return export(new File(new File(parent), getPath()), this, true);
+        return exportDir(new File(new File(parent), getPath()), true);
     }
 
     /**
@@ -766,7 +775,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdirs (@NonNull File parent) throws IOException {
-        return export(new File(parent, getPath()), this, true);
+        return exportDir(new File(parent, getPath()), true);
     }
 
     /**
@@ -782,7 +791,11 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdirs (@NonNull Uri parent) throws IOException {
-        return export(new File(new File(UriUtils.uri2path(parent)), getPath()), this, true);
+        String dirPath = UriUtils.uri2path(parent);
+        if (dirPath != null) {
+            return exportDir(new File(new File(dirPath), getPath()), true);
+        }
+        return null;
     }
 
     /**
@@ -799,7 +812,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdirs (@NonNull URI parent) throws IOException {
-        return export(new File(new File(parent), getPath()), this, true);
+        return exportDir(new File(new File(parent), getPath()), true);
     }
 
     /**
