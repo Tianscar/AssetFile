@@ -128,7 +128,7 @@ public class AssetFile {
             return null;
         }
         try {
-            InputStream input = ApplicationUtils.getAssets().open(path);
+            InputStream input = ApplicationUtils.getAssets().open(getPath());
             int length = input.available();
             byte[] data = new byte[length];
             int count = input.read(data, 0, length);
