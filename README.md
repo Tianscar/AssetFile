@@ -1,6 +1,6 @@
 # AssetFile
 
-With it, you can operate Android Asset resources just like using java.io.File.
+With it, you can operate android-asset resources just like using java.io.File.
 
 Not only the main AssetFile class, but also the accompanying I/O Stream class and Reader/Writer class.
 
