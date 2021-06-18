@@ -27,6 +27,6 @@ allprojects {
 ```
 dependencies {
 	...
-	implementation 'com.github.Tianscar:AssetFile:1.0.3'
+	implementation 'com.github.Tianscar:AssetFile:1.0.4'
 }
 ```
