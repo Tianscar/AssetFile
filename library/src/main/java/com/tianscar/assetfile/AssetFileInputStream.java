@@ -29,8 +29,6 @@ import android.content.res.AssetFileDescriptor;
 
 import androidx.annotation.NonNull;
 
-import com.tianscar.module.ApplicationUtils;
-
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -58,7 +56,7 @@ public class AssetFileInputStream extends InputStream {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileInputStream (@NonNull String name) throws IOException {
-        this(ApplicationUtils.getAssets().openFd(name));
+        this(Utils.getApplication().getAssets().openFd(name));
     }
 
     /**
@@ -70,7 +68,7 @@ public class AssetFileInputStream extends InputStream {
      * @throws IOException If an I/O error occurred
      */
     public AssetFileInputStream (@NonNull AssetFile file) throws IOException {
-        this(ApplicationUtils.getAssets().openFd(file.getPath()));
+        this(Utils.getApplication().getAssets().openFd(file.getPath()));
     }
 
     /**

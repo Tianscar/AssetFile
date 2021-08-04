@@ -30,9 +30,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tianscar.module.ApplicationUtils;
-import com.tianscar.module.UriUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -156,7 +153,7 @@ public class AssetFile {
             return null;
         }
         try {
-            InputStream input = ApplicationUtils.getAssets().open(getPath());
+            InputStream input = Utils.getApplication().getAssets().open(getPath());
             int length = input.available();
             byte[] data = new byte[length];
             int count = input.read(data, 0, length);
@@ -233,7 +230,7 @@ public class AssetFile {
      * method denies write access to the file
      */
     public @Nullable File createNewFile (@NonNull Uri parent) throws IOException {
-        return exportFile(new File(UriUtils.uri2path(parent), getName()), false);
+        return exportFile(new File(Utils.uri2path(parent), getName()), false);
     }
 
     /**
@@ -336,7 +333,7 @@ public class AssetFile {
             return true;
         }
         try {
-            ApplicationUtils.getAssets().open(getPath());
+            Utils.getApplication().getAssets().open(getPath());
             return true;
         }
         catch (Exception e) {
@@ -472,7 +469,7 @@ public class AssetFile {
      */
     public boolean isFile () {
         try {
-            return ApplicationUtils.getAssets().open(getPath()).available() >= 0;
+            return Utils.getApplication().getAssets().open(getPath()).available() >= 0;
         }
         catch (IOException e) {
             return false;
@@ -492,7 +489,7 @@ public class AssetFile {
             return result;
         }
         try {
-            InputStream stream = ApplicationUtils.getAssets().open(path);
+            InputStream stream = Utils.getApplication().getAssets().open(path);
             result = stream.available();
             stream.close();
         }
@@ -549,7 +546,7 @@ public class AssetFile {
         }
         String[] result = null;
         try {
-            String[] nameArray = ApplicationUtils.getAssets().list(path);
+            String[] nameArray = Utils.getApplication().getAssets().list(path);
             if (filter == null) {
                 return nameArray;
             }
@@ -619,7 +616,7 @@ public class AssetFile {
         }
         List<AssetFile> fileList = new ArrayList<>();
         try {
-            String[] nameArray = ApplicationUtils.getAssets().list(path);
+            String[] nameArray = Utils.getApplication().getAssets().list(path);
             if (nameArray != null) {
                 for (String name : nameArray) {
                     AssetFile file = new AssetFile(path, name);
@@ -664,7 +661,7 @@ public class AssetFile {
         }
         List<AssetFile> fileList = new ArrayList<>();
         try {
-            String[] nameArray = ApplicationUtils.getAssets().list(path);
+            String[] nameArray = Utils.getApplication().getAssets().list(path);
             if (nameArray != null) {
                 for (String name : nameArray) {
                     AssetFile file = new AssetFile(path, name);
@@ -753,7 +750,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdir (@NonNull Uri parent) throws IOException {
-        String dirPath = UriUtils.uri2path(parent);
+        String dirPath = Utils.uri2path(parent);
         if (dirPath != null) {
             return exportDir(new File(new File(dirPath), getPath()), false);
         }
@@ -819,7 +816,7 @@ public class AssetFile {
      * its SecurityManager.checkWrite(java.lang.String) method does not permit the named directory to be created
      */
     public @Nullable File mkdirs (@NonNull Uri parent) throws IOException {
-        String dirPath = UriUtils.uri2path(parent);
+        String dirPath = Utils.uri2path(parent);
         if (dirPath != null) {
             return exportDir(new File(new File(dirPath), getPath()), true);
         }
@@ -943,7 +940,7 @@ public class AssetFile {
      * method denies write access to the file
      */
     public @Nullable File renameTo (@NonNull Uri dest) throws IOException {
-        String pathname = UriUtils.uri2path(dest);
+        String pathname = Utils.uri2path(dest);
         if (pathname == null) {
             return null;
         }
