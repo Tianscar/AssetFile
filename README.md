@@ -28,3 +28,6 @@ dependencies {
 	implementation 'com.github.Tianscar:AssetFile:1.0.4.1'
 }
 ```
+
+# License
+[MIT](https://github.com/Tianscar/AssetFile/blob/master/LICENSE) © Tianscar
