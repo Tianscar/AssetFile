@@ -1,7 +1,7 @@
 # AssetFile
 
 With it, you can operate **Android-asset resources** just like using **java.io.File**.<br/>
-Not only the main AssetFile class, but also the accompanying I/O Stream class and Reader/Writer class.<br/>
+Not only the main **AssetFile** class, but also the accompanying **I/O Stream** class and **Reader/Writer** class.<br/>
 **Context** and **AssetManager** are automatically obtained and do not require manual transfer of parameters.<br/>
 
 Inspired by https://github.com/xiandanin/AssetFile
